@@ -189,7 +189,7 @@ namespace Cake.Compression
 		/// <param name="outputPath">Output path to uncompress into.</param>
 		/// <example>
 		/// <code>
-		/// ZipUncompress("Cake.tar.bz2", "./cake");
+		/// BZip2Uncompress("Cake.tar.bz2", "./cake");
 		/// </code>
 		/// </example>
 		[CakeMethodAlias]
@@ -368,7 +368,7 @@ namespace Cake.Compression
 		/// <param name="outputPath">Output path to uncompress into.</param>
 		/// <example>
 		/// <code>
-		/// ZipUncompress("Cake.tar.gz", "./cake");
+		/// GZipUncompress("Cake.tar.gz", "./cake");
 		/// </code>
 		/// </example>
 		[CakeMethodAlias]
