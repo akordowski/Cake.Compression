@@ -8,7 +8,7 @@ var configuration = Argument("configuration", "Debug");
 /* ---------------------------------------------------------------------------------------------------- */
 /* PACKAGE VERSION */
 
-var version = "0.1.0";
+var version = "0.1.1";
 var suffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + suffix;
 
