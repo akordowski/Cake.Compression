@@ -14,8 +14,9 @@ Cake.Compression is available as a nuget package from the package manager consol
 Install-Package Cake.Compression
 ```
 
-or directly in your build script via a cake addin directive:
+or directly in your build script via a Cake `#addin` directive:
 
 ```csharp
-#addin "Cake.Compression"
+#addin nuget:?package=SharpZipLib
+#addin nuget:?package=Cake.Compression
 ```
