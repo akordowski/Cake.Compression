@@ -68,8 +68,11 @@ namespace Cake.Compression.Classes
 						entryName = ZipEntry.CleanName(entryName);
 
 						// Create the tar archive entry.
-						ZipEntry entry = new ZipEntry(entryName);
-						entry.Size = inputStream.Length;
+						ZipEntry entry = new ZipEntry(entryName)
+						{
+							DateTime = File.GetLastWriteTime(absoluteInputPath.FullPath),
+							Size = inputStream.Length
+						};
 
 						zipOutputStream.PutNextEntry(entry);
 						inputStream.CopyTo(zipOutputStream);
