@@ -2,13 +2,14 @@
 /* ARGUMENTS */
 
 var target = Argument("target", "Default");
-var configuration = Argument("configuration", "Debug");
+var configuration = Argument("configuration", "Release");
 
 
 /* ---------------------------------------------------------------------------------------------------- */
 /* PACKAGE VERSION */
 
-var version = "0.1.1";
+var assemblyInfo = ParseAssemblyInfo("./src/Cake.Compression/Properties/AssemblyInfo.cs");
+var version = assemblyInfo.AssemblyVersion;
 var suffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + suffix;
 
