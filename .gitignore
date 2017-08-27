@@ -240,10 +240,8 @@ _Pvt_Extensions
 **/[Dd]ocs/[Hh]elp
 
 # Cake
-**/tools/nuget.exe
-**/tools/Addins/
-**/tools/Cake/
+**/tools/*
+!**/tools/packages.config
 
 # Build
-**/image/
-**/package/
+**/build/
