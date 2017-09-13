@@ -25,7 +25,7 @@ string GetPackageName()
     var assemblyInfo = GetAssemblyInfo();
     var version = assemblyInfo.AssemblyVersion;
     var suffix = configuration == "Debug" ? "-dbg" : "";
-    var packageName = string.Format("{0}-{1}{2}", Project, version, suffix);
+    var packageName = string.Format("{0}.{1}{2}", Project, version, suffix);
     
     return packageName;
 }
@@ -108,7 +108,7 @@ Task("PackageNuGet")
             LicenseUrl      = new Uri("https://github.com/akordowski/Cake.Compression/blob/master/LICENSE.txt"),
             Copyright       = assemblyInfo.Copyright,
             Tags            = new[] { "cake", "build", "compression", "bzip2", "gzip", "tar", "zip" },
-            Files           = new []
+            Files           = new[]
             {
                 new NuSpecContent { Source = string.Format("{0}LICENSE.txt", imageDir) },
                 new NuSpecContent { Source = string.Format("{0}{1}.dll", imageDir, Project), Target = @"lib\net45\" },
