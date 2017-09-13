@@ -245,3 +245,6 @@ _Pvt_Extensions
 
 # Build
 **/build/
+
+# JetBrains Rider
+.idea
