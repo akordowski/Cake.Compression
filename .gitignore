@@ -240,11 +240,6 @@ _Pvt_Extensions
 **/[Dd]ocs/[Hh]elp
 
 # Cake
+**/artifacts/*
 **/tools/*
 !**/tools/packages.config
-
-# Build
-**/build/
-
-# JetBrains Rider
-.idea

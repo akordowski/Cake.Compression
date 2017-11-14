@@ -1,63 +1,63 @@
+#load "./build/BuildParameters.cake"
+#load "./build/AppVeyorCI.cake"
+#load "./build/GitHub.cake"
+#load "./build/NuGet.cake"
+#load "./build/Twitter.cake"
 #tool "nuget:?package=NUnit.ConsoleRunner"
 
 /* ---------------------------------------------------------------------------------------------------- */
 /* Arguments */
 
-var target = Argument("target", "Default");
-var configuration = Argument("configuration", "Release");
+var parameters = BuildParameters.GetInstance(Context, "akordowski", "Cake.Compression", "master", "Cake.Compression", "./src/Cake.Compression/Properties/AssemblyInfo.cs");
+var publishingError = false;
 
 /* ---------------------------------------------------------------------------------------------------- */
-/* Constants */
+/* Setup */
 
-const string Project = "Cake.Compression";
-const string Solution = "./src/" + Project + ".sln";
-
-/* ---------------------------------------------------------------------------------------------------- */
-/* Methods */
-
-AssemblyInfoParseResult GetAssemblyInfo()
+Setup(context =>
 {
-    return ParseAssemblyInfo(string.Format("./src/{0}/Properties/AssemblyInfo.cs", Project));
-}
-
-string GetPackageName()
-{
-    var assemblyInfo = GetAssemblyInfo();
-    var version = assemblyInfo.AssemblyVersion;
-    var suffix = configuration == "Debug" ? "-dbg" : "";
-    var packageName = string.Format("{0}.{1}{2}", Project, version, suffix);
-    
-    return packageName;
-}
+    if (parameters.Repository.CanPublish)
+    {
+        Information($"Building version {parameters.Version.SemVersion} of {parameters.Project.Name} (Configuration: {parameters.Configuration}, Target: {parameters.Target}, IsTagged: {parameters.Repository.IsTagged}).");
+    }
+    else
+    {
+        Information($"Building of {parameters.Project.Name} (Configuration: {parameters.Configuration}, Target: {parameters.Target}).");
+    }
+});
 
 /* ---------------------------------------------------------------------------------------------------- */
 /* Tasks */
 
-Task("RestoreNuGet")
-    .Description("Restore NuGet packages.")
+Task("Clean")
     .Does(() =>
     {
-        NuGetRestore(Solution);
+        CleanDirectory(parameters.Directories.Artifacts);
+    });
+
+Task("RestoreNuGet")
+    .Does(() =>
+    {
+        NuGetRestore(parameters.Project.SolutionFile);
     });
 
 Task("Build")
-    .Description("Builds the solution.")
     .IsDependentOn("RestoreNuGet")
     .Does(() =>
     {
-        DotNetBuild(Solution, settings =>
-            settings
-                .SetConfiguration(configuration)
-                .SetVerbosity(Verbosity.Minimal)
-                .WithTarget("Build"));
+        DotNetBuild(parameters.Project.SolutionFile, settings => settings
+            .SetConfiguration(parameters.Configuration)
+            .SetVerbosity(Verbosity.Minimal)
+            .WithProperty("Version", parameters.Version.SemVersion)
+            .WithProperty("AssemblyVersion", parameters.Version.Version)
+            .WithProperty("FileVersion", parameters.Version.Version));
     });
 
 Task("Test")
-    .Description("Tests the project.")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        var testFile = string.Format("./src/{0}.Tests/bin/{1}/{0}.Tests.dll", Project, configuration);
+        var testFile = GetFiles("./src/**/bin/**/*.Tests.dll");
         
         NUnit3(testFile, new NUnit3Settings
         {
@@ -66,94 +66,161 @@ Task("Test")
     });
 
 Task("CreateImage")
-    .Description("Copies all files into the image directory")
+    .IsDependentOn("Clean")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        var packageName = GetPackageName();
-        var imageDir = string.Format("./build/{0}/", packageName);
-        var binDirFile = string.Format("./src/{0}/bin/{1}/{0}", Project, configuration);
-        
-        var files = new FilePath[]
-        {
-            "LICENSE.txt",
-            binDirFile + ".dll",
-            binDirFile + ".xml"
-        };
-        
-        CleanDirectory("./build/");
-        CreateDirectory(imageDir);
-        CopyFiles(files, imageDir);
+        var binDir = parameters.Directories.BinNet462;
+        var filePath = $"./src/{parameters.Project.Name}/bin/{parameters.Configuration}/{parameters.Project.Name}";
+
+        CleanDirectory(binDir);
+
+        CopyFileToDirectory(parameters.Files.License, parameters.Directories.Bin);
+        CopyFileToDirectory($"{filePath}.dll", binDir);
+        CopyFileToDirectory($"{filePath}.xml", binDir);
     });
 
 Task("PackageNuGet")
     .IsDependentOn("CreateImage")
     .Does(() =>
     {
-        var assemblyInfo = GetAssemblyInfo();
-        var packageName = GetPackageName();
-        var imageDir = string.Format("./{0}/", packageName);
-
-        var nuGetPackSettings = new NuGetPackSettings
+        NuGetPack($"./nuspec/{parameters.Project.Name}.nuspec", new NuGetPackSettings
         {
-            Id              = assemblyInfo.Title,
-            Version         = assemblyInfo.AssemblyVersion,
-            Title           = assemblyInfo.Title,
-            Authors         = new[] { "Artur Kordowski" },
-            Owners          = new[] { "Artur Kordowski" },
-            Description     = "A Cake AddIn which provides compression functionality for BZip2, GZip and Zip.",
-            Summary         = "A Cake AddIn which provides compression functionality for BZip2, GZip and Zip.",
-            ProjectUrl      = new Uri("https://github.com/akordowski/Cake.Compression"),
-            IconUrl         = new Uri("https://cdn.rawgit.com/cake-contrib/graphics/a5cf0f881c390650144b2243ae551d5b9f836196/png/cake-contrib-medium.png"),
-            LicenseUrl      = new Uri("https://github.com/akordowski/Cake.Compression/blob/master/LICENSE.txt"),
-            Copyright       = assemblyInfo.Copyright,
-            Tags            = new[] { "cake", "build", "compression", "bzip2", "gzip", "tar", "zip" },
-            Files           = new[]
-            {
-                new NuSpecContent { Source = string.Format("{0}LICENSE.txt", imageDir) },
-                new NuSpecContent { Source = string.Format("{0}{1}.dll", imageDir, Project), Target = @"lib\net45\" },
-                new NuSpecContent { Source = string.Format("{0}{1}.xml", imageDir, Project), Target = @"lib\net45\" }
-            },
-            Dependencies    = new[]
-            {
-                new NuSpecDependency { Id = "SharpZipLib", Version = "0.86.0" }
-            },
-            OutputDirectory = "./build"
-        };
-
-        NuGetPack(nuGetPackSettings);
+            Version = parameters.Version.SemVersion,
+            ReleaseNotes = parameters.ReleaseNotes.Notes.ToArray(),
+            BasePath = parameters.Directories.Bin,
+            OutputDirectory = parameters.Directories.NuGet,
+            Files = NuGet.GetFiles(Context, parameters.Directories.Bin),
+            Symbols = false
+        });
     });
 
 Task("PackageZip")
     .IsDependentOn("CreateImage")
     .Does(() =>
     {
-        var packageName = GetPackageName();
-        var imageDir = string.Format("./build/{0}/", packageName);
-        var zipFile = string.Format("./build/{0}.zip", packageName);
+        CleanDirectory(parameters.Directories.Zip);
+        Zip(parameters.Directories.Bin, parameters.Files.ZipArtifacts);
+    });
+
+/* ---------------------------------------------------------------------------------------------------- */
+/* Tasks Publish */
+
+Task("PublishAppVeyor")
+    .IsDependentOn("Package")
+    .WithCriteria(() => parameters.Repository.CanPublish)
+    .Does(() =>
+    {
+        var artifacts = GetFiles(parameters.Directories.NuGet + "/*")
+                      + GetFiles(parameters.Directories.Zip + "/*");
+
+        var appVeyor = AppVeyorCI.GetInstance(Context);
+        appVeyor.UploadArtifacts(artifacts);
+    })
+    .OnError(exception =>
+    {
+        Warning("PublishAppVeyor Task failed, but continuing with next Task...");
+        publishingError = true;
+    });
+
+Task("PublishNuGet")
+    .IsDependentOn("Package")
+    .WithCriteria(() => parameters.Repository.CanPublish)
+    .Does(() =>
+    {
+        var nugetFiles = GetFiles(parameters.Directories.NuGet + "/*");
         
-        Zip(imageDir, zipFile);
+        var nuGet = NuGet.GetInstance(Context);
+        nuGet.Push(nugetFiles);
+    })
+    .OnError(exception =>
+    {
+        Warning("PublishNuGet Task failed, but continuing with next Task...");
+        publishingError = true;
+    });
+
+Task("PublishGitHub")
+    .IsDependentOn("Package")
+    .WithCriteria(() => parameters.Repository.CanPublish)
+    .Does(() =>
+    {
+        var version = parameters.Version.SemVersion;
+        var assets = GetFiles(parameters.Directories.NuGet + "/*")
+                   + GetFiles(parameters.Directories.Zip + "/*");
+
+        GitHub.CreateReleaseNotes(parameters.ReleaseNotes, parameters.Files.GitReleaseNotes);
+
+        var gitHub = GitHub.GetInstance(Context);
+        gitHub.Create(new GitReleaseManagerCreateSettings
+        {
+            Name = version,
+            InputFilePath = parameters.Files.GitReleaseNotes,
+            Prerelease = true,
+            Assets = GitHub.GetAssets(assets),
+            TargetCommitish = parameters.Repository.Branch
+        });
+        gitHub.Publish(version);
+    })
+    .OnError(exception =>
+    {
+        Warning("PublishGitHub Task failed, but continuing with next Task...");
+        publishingError = true;
+    });
+
+/* ---------------------------------------------------------------------------------------------------- */
+/* Tasks Send Message */
+
+Task("SendTwitterMessage")
+    .WithCriteria(() => parameters.Repository.CanPublish && !publishingError)
+    .Does(() =>
+    {
+        var message = $"Version {parameters.Version.SemVersion} of {parameters.Project.Name} has just been released, https://www.nuget.org/packages/{parameters.Project.Name}.";
+        
+        var twitter = Twitter.GetInstance(Context);
+        twitter.SendMessage(message);
+    })
+    .OnError(exception =>
+    {
+        Warning("SendTwitterMessage Task failed, but continuing with next Task...");
+        publishingError = true;
     });
 
 /* ---------------------------------------------------------------------------------------------------- */
 /* Tasks Targets */
 
 Task("Default")
-    .Description("Builds the project")
     .IsDependentOn("Build");
 
 Task("Package")
-    .Description("Packages the project")
     .IsDependentOn("PackageNuGet")
     .IsDependentOn("PackageZip");
 
-Task("Appveyor")
-    .Description("Builds, tests and packages on AppVeyor")
-    .IsDependentOn("Build")
+Task("Publish")
+    .IsDependentOn("PublishAppVeyor")
+    .IsDependentOn("PublishNuGet")
+    .IsDependentOn("PublishGitHub");
+
+Task("SendMessage")
+    .IsDependentOn("SendTwitterMessage");
+
+var taskAppVeyor = Task("AppVeyor")
     .IsDependentOn("Test")
-    .IsDependentOn("Package");
+    .Finally(() =>
+    {
+        if (publishingError)
+        {
+            throw new Exception("An error occurred during the publishing. All publishing tasks have been attempted.");
+        }
+    });
+
+if (parameters.Repository.CanPublish)
+{
+    taskAppVeyor.IsDependentOn("Package");
+    taskAppVeyor.IsDependentOn("Publish");
+    taskAppVeyor.IsDependentOn("SendMessage");
+}
 
 /* ---------------------------------------------------------------------------------------------------- */
 /* Execution */
 
-RunTarget(target);
+RunTarget(parameters.Target);
