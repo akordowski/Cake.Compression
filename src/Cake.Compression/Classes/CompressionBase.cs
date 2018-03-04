@@ -13,9 +13,24 @@ namespace Cake.Compression.Classes
     public abstract class CompressionBase
     {
         #region Protected Fields
+        /// <summary>
+        /// Gets the file system.
+        /// </summary>
         protected readonly IFileSystem fileSystem;
+
+        /// <summary>
+        /// Gets the environment.
+        /// </summary>
         protected readonly ICakeEnvironment environment;
+
+        /// <summary>
+        /// Gets the log.
+        /// </summary>
         protected readonly ICakeLog log;
+
+        /// <summary>
+        /// Gets the string comparison.
+        /// </summary>
         protected readonly StringComparison comparison;
         #endregion
 
@@ -58,6 +73,12 @@ namespace Cake.Compression.Classes
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Gets a relative file path.
+        /// </summary>
+        /// <param name="root">A directory path.</param>
+        /// <param name="file">A file path.</param>
+        /// <returns>Returns a relative file path.</returns>
         protected FilePath GetRelativeFilePath(DirectoryPath root, FilePath file)
         {
             if (!file.FullPath.StartsWith(root.FullPath, comparison))
