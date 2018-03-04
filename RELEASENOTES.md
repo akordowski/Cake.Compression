@@ -1,3 +1,6 @@
+### 0.1.5
+Update to Cake 0.26.1.
+
 ### 0.1.4
 Update to Cake 0.22.0.
 
