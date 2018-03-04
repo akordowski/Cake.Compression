@@ -45,7 +45,7 @@ Task("Build")
     .IsDependentOn("RestoreNuGet")
     .Does(() =>
     {
-        DotNetBuild(parameters.Project.SolutionFile, settings => settings
+        MSBuild(parameters.Project.SolutionFile, settings => settings
             .SetConfiguration(parameters.Configuration)
             .SetVerbosity(Verbosity.Minimal)
             .WithProperty("Version", parameters.Version.SemVersion)
@@ -61,6 +61,7 @@ Task("Test")
         
         NUnit3(testFile, new NUnit3Settings
         {
+            NoHeader = true,
             NoResults = true
         });
     });
