@@ -58,7 +58,7 @@ Task("Test")
     .Does(() =>
     {
         var testFile = GetFiles("./src/**/bin/**/*.Tests.dll");
-        
+
         NUnit3(testFile, new NUnit3Settings
         {
             NoHeader = true,
@@ -71,7 +71,7 @@ Task("CreateImage")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        var binDir = parameters.Directories.BinNet462;
+        var binDir = parameters.Directories.BinNet461;
         var filePath = $"./src/{parameters.Project.Name}/bin/{parameters.Configuration}/{parameters.Project.Name}";
 
         CleanDirectory(binDir);
@@ -130,7 +130,7 @@ Task("PublishNuGet")
     .Does(() =>
     {
         var nugetFiles = GetFiles(parameters.Directories.NuGet + "/*");
-        
+
         var nuGet = NuGet.GetInstance(Context);
         nuGet.Push(nugetFiles);
     })
@@ -176,7 +176,7 @@ Task("SendTwitterMessage")
     .Does(() =>
     {
         var message = $"Version {parameters.Version.SemVersion} of {parameters.Project.Name} has just been released, https://www.nuget.org/packages/{parameters.Project.Name}.";
-        
+
         var twitter = Twitter.GetInstance(Context);
         twitter.SendMessage(message);
     })
