@@ -1,13 +1,13 @@
 #load "./Precondition.cake"
 #load "./GitHubCredentials.cake"
-#tool "nuget:?package=gitreleasemanager&version=0.5.0"
+#tool "nuget:?package=GitReleaseManager&version=0.7.0"
 
 public class GitHub
 {
     public GitHubCredentials Credentials { get; }
     public string Owner { get; }
     public string Repo { get; }
-    
+
     private ICakeContext context;
 
     public GitHub(ICakeContext context, GitHubCredentials credentials, string owner, string repo)
@@ -16,11 +16,11 @@ public class GitHub
         Precondition.IsNotNull(credentials, nameof(credentials));
         Precondition.IsNotNullOrWhiteSpace(owner, nameof(owner));
         Precondition.IsNotNullOrWhiteSpace(repo, nameof(repo));
-        
+
         Credentials = credentials;
         Owner = owner;
         Repo = repo;
-        
+
         this.context = context;
     }
 
@@ -35,17 +35,17 @@ public class GitHub
         Precondition.IsNotNullOrWhiteSpace(repo, "GITHUB_REPO", "Could not resolve GITHUB_REPO.");
 
         var credentials = GitHubCredentials.GetInstance(context);
-        
+
         return new GitHub(context, credentials, owner, repo);
     }
 
     public static string GetAssets(FilePathCollection files)
     {
         Precondition.IsNotNull(files, nameof(files));
-        
+
         var arr = files.ToList().ConvertAll(f => f.ToString()).ToArray();
         var assets = String.Join(",", arr);
-        
+
         return assets;
     }
 
@@ -58,7 +58,7 @@ public class GitHub
     {
         Precondition.IsNotNullOrWhiteSpace(tagName, nameof(tagName));
         Precondition.IsNotNullOrWhiteSpace(assets, nameof(assets));
-        
+
         context.GitReleaseManagerAddAssets(
             Credentials.Username,
             Credentials.Password,
@@ -73,7 +73,7 @@ public class GitHub
         Precondition.IsNotNullOrWhiteSpace(tagName, nameof(tagName));
         Precondition.IsNotNullOrWhiteSpace(assets, nameof(assets));
         Precondition.IsNotNull(settings, nameof(settings));
-        
+
         context.GitReleaseManagerAddAssets(
             Credentials.Username,
             Credentials.Password,
@@ -87,7 +87,7 @@ public class GitHub
     public void Close(string milestone)
     {
         Precondition.IsNotNullOrWhiteSpace(milestone, nameof(milestone));
-        
+
         context.GitReleaseManagerClose(
             Credentials.Username,
             Credentials.Password,
@@ -100,7 +100,7 @@ public class GitHub
     {
         Precondition.IsNotNullOrWhiteSpace(milestone, nameof(milestone));
         Precondition.IsNotNull(settings, nameof(settings));
-        
+
         context.GitReleaseManagerClose(
             Credentials.Username,
             Credentials.Password,
@@ -122,7 +122,7 @@ public class GitHub
     public void Create(GitReleaseManagerCreateSettings settings)
     {
         Precondition.IsNotNull(settings, nameof(settings));
-        
+
         context.GitReleaseManagerCreate(
             Credentials.Username,
             Credentials.Password,
