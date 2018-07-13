@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Compression", "Cake.Compression\Cake.Compression.csproj", "{DFCE574D-731A-4C89-9B74-9FF2A93ED966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Compression.Tests", "Cake.Compression.Tests\Cake.Compression.Tests.csproj", "{CF6FF57A-EDBE-4AE4-B03D-970B9A54744F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5CF45611-BAAE-42E7-BD9C-3910A7DEB68C}"
 	ProjectSection(SolutionItems) = preProject
 		..\build.bat = ..\build.bat
@@ -18,10 +16,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{8CF42A9F-2A6F-4E2B-9495-A90E3A0A3032}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
-		..\LICENSE.txt = ..\LICENSE.txt
+		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 		..\RELEASENOTES.md = ..\RELEASENOTES.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Compression.Tests", "Cake.Compression.Tests\Cake.Compression.Tests.csproj", "{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,10 @@ Global
 		{DFCE574D-731A-4C89-9B74-9FF2A93ED966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFCE574D-731A-4C89-9B74-9FF2A93ED966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFCE574D-731A-4C89-9B74-9FF2A93ED966}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF6FF57A-EDBE-4AE4-B03D-970B9A54744F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF6FF57A-EDBE-4AE4-B03D-970B9A54744F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF6FF57A-EDBE-4AE4-B03D-970B9A54744F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF6FF57A-EDBE-4AE4-B03D-970B9A54744F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
