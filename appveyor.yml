@@ -1,10 +1,17 @@
-# Build script
+image: Visual Studio 2017
+
+skip_commits:
+  files:
+    - nuspec/*
+    - tools/*
+    - '**/*.cake'
+    - '**/*.md'
+    - '**/*.yml'
+
 init:
   - git config --global core.autocrlf true
 
-# Build script
 build_script:
-  - ps: .\build.ps1 -target "AppVeyor" -settings_skipverification=true
+  - ps: .\build.ps1 -settings_skipverification=true -target AppVeyor
 
-# Tests
 test: off
