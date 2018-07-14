@@ -1,3 +1,7 @@
+### 0.2.0
+Update to target .netstandard2.0.
+Update SharpZipLib to version 1.0.0-rc1.
+
 ### 0.1.7
 Update to Cake 0.29.0.
 
