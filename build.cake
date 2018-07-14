@@ -6,11 +6,17 @@ Task("CreateImage")
     .IsDependeeOf("Image")
     .Does(() =>
     {
-        var pathTarget = Build.Paths.Directories.Image.Combine("lib/net461");
+        var pathTarget = Build.Paths.Directories.Image.Combine("lib/netstandard2.0");
+        var pathSource = string.Format("{0}/{1}/**/{1}.*", Build.Paths.Directories.PublishedLibraries, Build.Parameters.Title);
+        var files = GetFiles(pathSource).Where(fileSystemInfo =>
+        {
+            var fullPath = fileSystemInfo.FullPath;
+            return fullPath.EndsWith(".dll") || fullPath.EndsWith(".pdb") || fullPath.EndsWith(".xml");
+        });
 
         CleanDirectory(pathTarget);
         CopyFiles(Build.Paths.Files.License.ToString(), Build.Paths.Directories.Image);
-        CopyFiles(Build.Paths.Directories.PublishedLibraries + "/Cake.Compression/Cake.Compression.*", pathTarget);
+        CopyFiles(files, pathTarget);
     });
 
 Build
