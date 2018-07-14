@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.18.0</Version>
+    <Version>0.2.0</Version>
     <Copyright>Copyright (c) 2016 Artur Kordowski</Copyright>
     <Description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip. </Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\Cake.Compression.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cake.Common" version="0.29.0" />
