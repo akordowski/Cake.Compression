@@ -14,7 +14,7 @@
     <copyright>Copyright (c) 2016 Artur Kordowski</copyright>
     <tags>cake build compression bzip2 gzip tar zip</tags>
     <dependencies>
-      <dependency id="SharpZipLib" version="0.86.0" />
+      <dependency id="SharpZipLib" version="1.0.0-rc1" />
     </dependencies>
   </metadata>
 </package>
