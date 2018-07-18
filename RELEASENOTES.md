@@ -1,3 +1,6 @@
+### 0.2.1
+Fix nuspec to target SharpZipLib 1.0.0-rc1.
+
 ### 0.2.0
 Update to target .netstandard2.0.
 Update SharpZipLib to version 1.0.0-rc1.
