@@ -9,7 +9,7 @@
     <DocumentationFile>bin\Release\netstandard2.0\Cake.Compression.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cake.Common" version="0.30.0" PrivateAssets="All" />
-    <PackageReference Include="SharpZipLib" version="1.0.0" />
+    <PackageReference Include="Cake.Common" version="0.32.1" PrivateAssets="All" />
+    <PackageReference Include="SharpZipLib" version="1.1.0" />
   </ItemGroup>
 </Project>

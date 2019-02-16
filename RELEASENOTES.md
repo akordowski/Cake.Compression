@@ -1,3 +1,6 @@
+### 0.2.2
+Update dependencies.
+
 ### 0.2.1
 Fix nuspec to target SharpZipLib 1.0.0-rc1.
 
