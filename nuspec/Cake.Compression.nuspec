@@ -8,7 +8,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/akordowski/Cake.Compression/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/akordowski/Cake.Compression</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/cake-contrib/graphics/a5cf0f881c390650144b2243ae551d5b9f836196/png/cake-contrib-medium.png</iconUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</iconUrl>
     <description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip.</description>
     <summary>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip.</summary>
     <copyright>Copyright (c) 2016 Artur Kordowski</copyright>
