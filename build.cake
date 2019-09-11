@@ -22,7 +22,10 @@ Task("CreateImage")
 Build
     .SetParameters(
         "Cake.Compression",
-        "akordowski")
+        "akordowski",
+        shouldPublishToNuGet:true,
+        shouldPublishToGitHub:true,
+        shouldPostToTwitter:true)
     .SetMessages(
         twitterMessage: twitterMessage)
     .Run();
