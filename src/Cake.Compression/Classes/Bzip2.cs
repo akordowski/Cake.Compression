@@ -5,6 +5,7 @@ using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.Tar;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Cake.Compression.Classes
 {
@@ -48,30 +49,28 @@ namespace Cake.Compression.Classes
             // Open up a stream to the output file.
             log.Verbose("Creating BZip2 file: {0}", outputPath.FullPath);
 
-            using (var outputStream = outputFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
-            using (var bzip2OutputStream = new BZip2OutputStream(outputStream, level))
-            using (var tarOutputStream = new TarOutputStream(bzip2OutputStream))
+            using var outputStream = outputFile.Open(FileMode.Create, FileAccess.Write, FileShare.None);
+            using var bzip2OutputStream = new BZip2OutputStream(outputStream, level);
+            using var tarOutputStream = new TarOutputStream(bzip2OutputStream, Encoding.UTF8);
+
+            foreach (var inputPath in filePaths)
             {
-                foreach (var inputPath in filePaths)
-                {
-                    var absoluteInputPath = inputPath.MakeAbsolute(environment);
-                    var file = fileSystem.GetFile(absoluteInputPath);
+                var absoluteInputPath = inputPath.MakeAbsolute(environment);
+                var file = fileSystem.GetFile(absoluteInputPath);
 
-                    using (var inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        // Get the relative filename to the rootPath.
-                        var relativeFilePath = GetRelativeFilePath(rootPath, absoluteInputPath);
-                        log.Verbose("Compressing file {0}", absoluteInputPath);
+                using var inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
 
-                        // Create the tar archive entry.
-                        TarEntry entry = TarEntry.CreateTarEntry(relativeFilePath.FullPath);
-                        entry.Size = inputStream.Length;
+                // Get the relative filename to the rootPath.
+                var relativeFilePath = GetRelativeFilePath(rootPath, absoluteInputPath);
+                log.Verbose("Compressing file {0}", absoluteInputPath);
 
-                        tarOutputStream.PutNextEntry(entry);
-                        inputStream.CopyTo(tarOutputStream);
-                        tarOutputStream.CloseEntry();
-                    }
-                }
+                // Create the tar archive entry.
+                TarEntry entry = TarEntry.CreateTarEntry(relativeFilePath.FullPath);
+                entry.Size = inputStream.Length;
+
+                tarOutputStream.PutNextEntry(entry);
+                inputStream.CopyTo(tarOutputStream);
+                tarOutputStream.CloseEntry();
             }
 
             log.Verbose("BZip2 file successfully created: {0}", outputPath.FullPath);
@@ -95,13 +94,12 @@ namespace Cake.Compression.Classes
 
             log.Verbose("Uncompress BZip2 file {0} to {1}", filePath.FullPath, outputPath.FullPath);
 
-            using (Stream inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (Stream bzip2InputStream = new BZip2InputStream(inputStream))
-            {
-                TarArchive archive = TarArchive.CreateInputTarArchive(bzip2InputStream);
-                archive.ExtractContents(outputPath.FullPath);
-                archive.Close();
-            }
+            using Stream inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+            using Stream bzip2InputStream = new BZip2InputStream(inputStream);
+
+            TarArchive archive = TarArchive.CreateInputTarArchive(bzip2InputStream, Encoding.UTF8);
+            archive.ExtractContents(outputPath.FullPath);
+            archive.Close();
         }
         #endregion
     }

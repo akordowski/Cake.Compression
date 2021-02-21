@@ -5,6 +5,7 @@ using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Cake.Compression.Classes
 {
@@ -48,32 +49,29 @@ namespace Cake.Compression.Classes
             // Open up a stream to the output file.
             log.Verbose("Creating Zip file: {0}", outputPath.FullPath);
 
-            using (var outputStream = outputFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
-            using (var gzipOutputStream = new GZipOutputStream(outputStream))
-            using (var tarOutputStream = new TarOutputStream(gzipOutputStream))
+            using var outputStream = outputFile.Open(FileMode.Create, FileAccess.Write, FileShare.None);
+            using var gzipOutputStream = new GZipOutputStream(outputStream);
+            using var tarOutputStream = new TarOutputStream(gzipOutputStream, Encoding.UTF8);
+
+            gzipOutputStream.SetLevel(level);
+
+            foreach (var inputPath in filePaths)
             {
-                gzipOutputStream.SetLevel(level);
+                var absoluteInputPath = inputPath.MakeAbsolute(environment);
+                var file = fileSystem.GetFile(absoluteInputPath);
 
-                foreach (var inputPath in filePaths)
-                {
-                    var absoluteInputPath = inputPath.MakeAbsolute(environment);
-                    var file = fileSystem.GetFile(absoluteInputPath);
+                using var inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                // Get the relative filename to the rootPath.
+                var relativeFilePath = GetRelativeFilePath(rootPath, absoluteInputPath);
+                log.Verbose("Compressing file {0}", absoluteInputPath);
 
-                    using (var inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        // Get the relative filename to the rootPath.
-                        var relativeFilePath = GetRelativeFilePath(rootPath, absoluteInputPath);
-                        log.Verbose("Compressing file {0}", absoluteInputPath);
+                // Create the tar archive entry.
+                TarEntry entry = TarEntry.CreateTarEntry(relativeFilePath.FullPath);
+                entry.Size = inputStream.Length;
 
-                        // Create the tar archive entry.
-                        TarEntry entry = TarEntry.CreateTarEntry(relativeFilePath.FullPath);
-                        entry.Size = inputStream.Length;
-
-                        tarOutputStream.PutNextEntry(entry);
-                        inputStream.CopyTo(tarOutputStream);
-                        tarOutputStream.CloseEntry();
-                    }
-                }
+                tarOutputStream.PutNextEntry(entry);
+                inputStream.CopyTo(tarOutputStream);
+                tarOutputStream.CloseEntry();
             }
 
             log.Verbose("GZip file successfully created: {0}", outputPath.FullPath);
@@ -97,13 +95,12 @@ namespace Cake.Compression.Classes
 
             log.Verbose("Uncompress GZip file {0} to {1}", filePath.FullPath, outputPath.FullPath);
 
-            using (Stream inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (Stream gzipInputStream = new GZipInputStream(inputStream))
-            {
-                TarArchive archive = TarArchive.CreateInputTarArchive(gzipInputStream);
-                archive.ExtractContents(outputPath.FullPath);
-                archive.Close();
-            }
+            using Stream inputStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+            using Stream gzipInputStream = new GZipInputStream(inputStream);
+
+            TarArchive archive = TarArchive.CreateInputTarArchive(gzipInputStream, Encoding.UTF8);
+            archive.ExtractContents(outputPath.FullPath);
+            archive.Close();
         }
         #endregion
     }
