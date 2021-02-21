@@ -1,3 +1,7 @@
+### 0.2.5
+Update to Cake 1.0.
+Update dependencies.
+
 ### 0.2.4
 Update dependencies.
 
