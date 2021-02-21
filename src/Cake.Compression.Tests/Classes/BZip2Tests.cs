@@ -14,10 +14,10 @@ namespace Cake.Compression.Tests.Classes
     public class BZip2Test
     {
         #region Private Fields
-        DirectoryPath rootPath = "/Root";
-        FilePath outputPath = "/archive.tar.bz2";
-        IEnumerable<FilePath> filePaths = new FilePath[] { "/Root/file.txt" };
-        int level = 6;
+        private readonly DirectoryPath rootPath = "/Root";
+        private readonly FilePath outputPath = "/archive.tar.bz2";
+        private readonly IEnumerable<FilePath> filePaths = new FilePath[] { "/Root/file.txt" };
+        private readonly int level = 6;
         #endregion
 
         #region Constructor Tests

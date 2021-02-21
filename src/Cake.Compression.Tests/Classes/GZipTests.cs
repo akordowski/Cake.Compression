@@ -14,10 +14,10 @@ namespace Cake.Compression.Tests.Classes
     public class GZipTest
     {
         #region Private Fields
-        DirectoryPath rootPath = "/Root";
-        FilePath outputPath = "/archive.tar.gz";
-        IEnumerable<FilePath> filePaths = new FilePath[] { "/Root/file.txt" };
-        int level = 6;
+        private readonly DirectoryPath rootPath = "/Root";
+        private readonly FilePath outputPath = "/archive.tar.gz";
+        private readonly IEnumerable<FilePath> filePaths = new FilePath[] { "/Root/file.txt" };
+        private readonly int level = 6;
         #endregion
 
         #region Constructor Tests
