@@ -1,3 +1,6 @@
+### 0.2.6
+Add framework support for `net461`, `netstandard2.0`, `net5.0`
+
 ### 0.2.5
 Update to Cake 1.0.
 Update dependencies.
