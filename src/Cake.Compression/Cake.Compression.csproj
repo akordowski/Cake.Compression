@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.2.5</Version>
+    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
+    <Version>0.2.6</Version>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) Artur Kordowski</Copyright>
     <Description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip. </Description>
     <Authors>Artur Kordowski</Authors>
