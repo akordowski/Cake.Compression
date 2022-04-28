@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
-    <Version>0.2.6</Version>
+    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.3.0</Version>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) Artur Kordowski</Copyright>
     <Description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip. </Description>
     <Authors>Artur Kordowski</Authors>
     <PackageProjectUrl>https://github.com/akordowski/Cake.Compression</PackageProjectUrl>
     <RepositoryUrl>https://github.com/akordowski/Cake.Compression</RepositoryUrl>
-    <PackageTags>cake build compression bzip2 gzip tar zip</PackageTags>
+    <PackageTags>cake-addin cake build compression bzip2 gzip tar zip</PackageTags>
     <PackageIcon>cake-contrib-medium.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\Cake.Compression.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net6.0\Cake.Compression.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cake.Common" version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Cake.Common" version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="SharpZipLib" version="1.3.1" />
   </ItemGroup>
   <ItemGroup>
