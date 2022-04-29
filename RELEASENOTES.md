@@ -1,3 +1,11 @@
+### 0.3.0
+Update to Cake 2.0.0
+Add framework support for `netcoreapp3.1`, `net6.0`
+Drop framework support for `net461`, `netstandard2.0`
+Update contrib icon
+Update dependencies
+Add GitHub Action
+
 ### 0.2.6
 Add framework support for `net461`, `netstandard2.0`, `net5.0`
 

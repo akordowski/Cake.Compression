@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Compression", "Cake.Compression\Cake.Compression.csproj", "{DFCE574D-731A-4C89-9B74-9FF2A93ED966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cake.Compression", "Cake.Compression\Cake.Compression.csproj", "{DFCE574D-731A-4C89-9B74-9FF2A93ED966}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5CF45611-BAAE-42E7-BD9C-3910A7DEB68C}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5CF45611
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
 		..\build.sh = ..\build.sh
+		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{8CF42A9F-2A6F-4E2B-9495-A90E3A0A3032}"
@@ -21,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{8CF4
 		..\RELEASENOTES.md = ..\RELEASENOTES.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Compression.Tests", "Cake.Compression.Tests\Cake.Compression.Tests.csproj", "{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cake.Compression.Tests", "Cake.Compression.Tests\Cake.Compression.Tests.csproj", "{3BBE9E87-073D-4191-9A4B-13ED553FA7DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
