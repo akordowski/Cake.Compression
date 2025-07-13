@@ -6,7 +6,7 @@ Task("CreateImage")
     .IsDependeeOf("Image")
     .Does(() =>
     {
-        var pathTarget = Build.Paths.Directories.Image.Combine("lib/netstandard2.0");
+        var pathTarget = Build.Paths.Directories.Image.Combine("lib/net8.0");
         var pathSource = string.Format("{0}/{1}/**/{1}.*", Build.Paths.Directories.PublishedLibraries, Build.Parameters.Title);
         var files = GetFiles(pathSource).Where(fileSystemInfo =>
         {
