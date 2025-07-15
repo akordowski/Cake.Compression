@@ -1,94 +1,90 @@
-﻿using Cake.Core;
+using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 
-namespace Cake.Compression.Classes
+namespace Cake.Compression.Classes;
+
+/// <summary>
+/// Provides a <see cref="CompressionBase"/> class.
+/// </summary>
+public abstract class CompressionBase
 {
     /// <summary>
-    /// Provides a <see cref="CompressionBase"/> class.
+    /// Gets the file system.
     /// </summary>
-    public abstract class CompressionBase
+    protected IFileSystem FileSystem { get; }
+
+    /// <summary>
+    /// Gets the environment.
+    /// </summary>
+    protected ICakeEnvironment Environment { get; }
+
+    /// <summary>
+    /// Gets the log.
+    /// </summary>
+    protected ICakeLog Log { get; }
+
+    /// <summary>
+    /// Gets the string comparison.
+    /// </summary>
+    protected StringComparison Comparison { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CompressionBase"/> class.
+    /// </summary>
+    /// <param name="fileSystem">The file system.</param>
+    /// <param name="environment">The environment.</param>
+    /// <param name="log">The log.</param>
+    protected CompressionBase(
+        IFileSystem fileSystem,
+        ICakeEnvironment environment,
+        ICakeLog log)
     {
-        #region Protected Fields
-        /// <summary>
-        /// Gets the file system.
-        /// </summary>
-        protected readonly IFileSystem fileSystem;
+        ArgumentNullException.ThrowIfNull(fileSystem, nameof(fileSystem));
+        ArgumentNullException.ThrowIfNull(environment, nameof(environment));
+        ArgumentNullException.ThrowIfNull(log, nameof(log));
 
-        /// <summary>
-        /// Gets the environment.
-        /// </summary>
-        protected readonly ICakeEnvironment environment;
+        FileSystem = fileSystem;
+        Environment = environment;
+        Log = log;
+        Comparison = environment.Platform.IsUnix()
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+    }
 
-        /// <summary>
-        /// Gets the log.
-        /// </summary>
-        protected readonly ICakeLog log;
+    /// <summary>
+    /// Create a archive of the specified files.
+    /// </summary>
+    /// <param name="rootPath">The root path.</param>
+    /// <param name="outputPath">The output path.</param>
+    /// <param name="filePaths">The file paths.</param>
+    /// <param name="level">The compression level (1-9).</param>
+    public abstract void Compress(
+        DirectoryPath rootPath,
+        FilePath outputPath,
+        IEnumerable<FilePath> filePaths,
+        int level);
 
-        /// <summary>
-        /// Gets the string comparison.
-        /// </summary>
-        protected readonly StringComparison comparison;
-        #endregion
+    /// <summary>
+    /// Decompress the specified archive.
+    /// </summary>
+    /// <param name="filePath">Archive to decompress.</param>
+    /// <param name="outputPath">Output path to decompress into.</param>
+    public abstract void Decompress(FilePath filePath, DirectoryPath outputPath);
 
-        #region Constructor
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompressionBase"/> class.
-        /// </summary>
-        /// <param name="fileSystem">The file system.</param>
-        /// <param name="environment">The environment.</param>
-        /// <param name="log">The log.</param>
-        protected CompressionBase(IFileSystem fileSystem, ICakeEnvironment environment, ICakeLog log)
+    /// <summary>
+    /// Gets a relative file path.
+    /// </summary>
+    /// <param name="root">A directory path.</param>
+    /// <param name="file">A file path.</param>
+    /// <returns>Returns a relative file path.</returns>
+    protected FilePath GetRelativeFilePath(DirectoryPath root, FilePath file)
+    {
+        if (file.FullPath.StartsWith(root.FullPath, Comparison))
         {
-            Precondition.IsNotNull(fileSystem, nameof(fileSystem));
-            Precondition.IsNotNull(environment, nameof(environment));
-            Precondition.IsNotNull(log, nameof(log));
-
-            this.fileSystem = fileSystem;
-            this.environment = environment;
-            this.log = log;
-            this.comparison = environment.Platform.IsUnix() ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            return file.FullPath[(root.FullPath.Length + 1)..];
         }
-        #endregion
 
-        #region Public Methods
-        /// <summary>
-        /// Create a archive of the specified files.
-        /// </summary>
-        /// <param name="rootPath">The root path.</param>
-        /// <param name="outputPath">The output path.</param>
-        /// <param name="filePaths">The file paths.</param>
-        /// <param name="level">The compression level (1-9).</param>
-        public abstract void Compress(DirectoryPath rootPath, FilePath outputPath, IEnumerable<FilePath> filePaths, int level);
-
-        /// <summary>
-        /// Uncompress the specified archive.
-        /// </summary>
-        /// <param name="filePath">Archive to uncompress.</param>
-        /// <param name="outputPath">Output path to uncompress into.</param>
-        public abstract void Uncompress(FilePath filePath, DirectoryPath outputPath);
-        #endregion
-
-        #region Protected Methods
-        /// <summary>
-        /// Gets a relative file path.
-        /// </summary>
-        /// <param name="root">A directory path.</param>
-        /// <param name="file">A file path.</param>
-        /// <returns>Returns a relative file path.</returns>
-        protected FilePath GetRelativeFilePath(DirectoryPath root, FilePath file)
-        {
-            if (!file.FullPath.StartsWith(root.FullPath, comparison))
-            {
-                const string format = "File '{0}' is not relative to root path '{1}'.";
-                throw new CakeException(string.Format(CultureInfo.InvariantCulture, format, file.FullPath, root.FullPath));
-            }
-
-            return file.FullPath.Substring(root.FullPath.Length + 1);
-        }
-        #endregion
+        throw new CakeException($"File '{file.FullPath}' is not relative to root path '{root.FullPath}'.");
     }
 }

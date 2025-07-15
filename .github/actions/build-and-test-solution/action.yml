@@ -1,0 +1,32 @@
+name: Build and test solution
+description: Build and test solution
+inputs:
+  dotnet-version:
+    description: 'The dotnet version'
+    default: '9.0.x'
+  configuration:
+    description: 'The dotnet build configuration'
+    default: 'Release'
+runs:
+  using: "composite"
+  steps:
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Restore dependencies
+      shell: bash
+      run: dotnet restore
+
+    - name: Build solution
+      shell: bash
+      run: dotnet build --configuration ${{ inputs.configuration }} --no-restore
+
+    - name: Run unit tests
+      shell: bash
+      run: |
+        export TEST_PROJECTS=$(find ./tests -type f -name "*.Tests.csproj")
+        for project in $TEST_PROJECTS; do
+          dotnet test --configuration ${{ inputs.configuration }} $project --no-build --verbosity Normal --logger trx --collect:"XPlat Code Coverage" --results-directory:"test-results/coverage/" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute
+        done

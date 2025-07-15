@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable central package management -->
+    <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="Cake.Common" Version="5.0.0" />
+    <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+    <!-- Symbols -->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,29 @@
+name: Publish NuGet
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+env:
+  NUGET_PACKAGE_DIR: ./nupkg
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  NUGET_SOURCE: ${{ vars.NUGET_SOURCE }}
+
+jobs:
+  publish-nuget:
+    if: github.event.base_ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build and test solution
+        uses: ./.github/actions/build-and-test-solution
+
+      - name: Pack NuGet packages
+        run: dotnet pack --configuration Release --no-build --output $NUGET_PACKAGE_DIR
+
+      - name: Publish NuGet packages and symbols
+        run: dotnet nuget push $NUGET_PACKAGE_DIR/*.nupkg --api-key $NUGET_API_KEY --source $NUGET_SOURCE

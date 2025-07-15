@@ -1,0 +1,43 @@
+##########################################
+# Common Settings
+##########################################
+
+# This file is the top-most EditorConfig file
+root = true
+
+# All Files
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# JSON
+[*.{json,json5,webmanifest}]
+indent_size = 2
+
+# Markdown
+[*.{md,mdx}]
+trim_trailing_whitespace = false
+
+# Visual Studio
+[*.{csproj}]
+indent_size = 2
+
+[*.cs]
+# https://learn.microsoft.com/de-de/dotnet/fundamentals/code-analysis/style-rules/ide0063
+dotnet_diagnostic.IDE0063.severity = none
+csharp_prefer_simple_using_statement = false
+
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290
+dotnet_diagnostic.IDE0290.severity = none
+csharp_style_prefer_primary_constructors = false
+
+# ReSharper
+# https://www.jetbrains.com/help/rider/ConvertToPrimaryConstructor.html
+resharper_convert_to_primary_constructor_highlighting = none
+
+resharper_convert_to_using_declaration_highlighting = none
+
+resharper_foreach_can_be_converted_to_query_using_another_get_enumerator_highlighting = none

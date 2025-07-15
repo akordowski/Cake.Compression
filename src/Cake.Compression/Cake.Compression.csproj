@@ -1,32 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.4.0</Version>
-    <Copyright>Copyright (c) $([System.DateTime]::Now.Year) Artur Kordowski</Copyright>
-    <Description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip. </Description>
-    <Authors>Artur Kordowski</Authors>
-    <PackageProjectUrl>https://github.com/akordowski/Cake.Compression</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/akordowski/Cake.Compression</RepositoryUrl>
-    <PackageTags>cake-addin cake build compression bzip2 gzip tar zip</PackageTags>
-    <PackageIcon>cake-contrib-medium.png</PackageIcon>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <NoWarn>$(NoWarn);CA1062;CA1724</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net8.0\Cake.Compression.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Cake.Common" version="5.0.0" PrivateAssets="All" />
-    <PackageReference Include="SharpZipLib" version="1.4.2" />
+    <PackageReference Include="Cake.Common" />
+    <PackageReference Include="SharpZipLib" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\assets\cake-contrib-medium.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+
+  <Import Project="$(RepoRoot)/nuget/NuGet.Package.props" />
+
 </Project>

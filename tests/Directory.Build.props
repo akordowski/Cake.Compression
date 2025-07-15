@@ -1,0 +1,9 @@
+<Project>
+  <!-- Default properties inherited by all projects. Projects can override. -->
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn)</NoWarn>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>
