@@ -1,3 +1,8 @@
+### 0.4.0
+Update to Cake 5.0.0
+Add framework support for `net8.0`
+Drop framework support for `netcoreapp3.1`, `net5.0`, `net6.0`
+
 ### 0.3.0
 Update to Cake 2.0.0
 Add framework support for `netcoreapp3.1`, `net6.0`

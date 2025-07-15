@@ -243,3 +243,6 @@ _Pvt_Extensions
 **/artifacts/*
 **/tools/*
 !**/tools/packages.config
+
+# Rider
+.idea/
