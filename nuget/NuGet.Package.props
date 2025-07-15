@@ -1,0 +1,56 @@
+<Project>
+  <PropertyGroup>
+    <Configurations>Debug;Release</Configurations>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>true</IsPackable>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
+
+    <!-- Central version prefix - applies to all nuget packages. -->
+    <VersionPrefix>0.4.0</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <PackageVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
+
+    <!-- Package validation. Baseline Version should be lower or equal to current version. -->
+    <PackageValidationBaselineVersion>0.1.0</PackageValidationBaselineVersion>
+
+    <!-- Default description and tags. Packages can override. -->
+    <Authors>Artur Kordowski</Authors>
+    <Product>Cake.Compression</Product>
+    <Description>A Cake AddIn which provides compression functionality for BZip2, GZip and Zip.</Description>
+    <PackageTags>cake-addin cake build compression bzip2 gzip tar zip</PackageTags>
+    <PackageId>$(AssemblyName)</PackageId>
+
+    <!-- Required license, copyright, and repo information. Packages can override. -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>Copyright (c) 2016-present Artur Kordowski. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/akordowski/Cake.Compression</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/akordowski/Cake.Compression</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Use icon and NUGET readme from dotnet/nuget folder -->
+    <PackageIcon>cake-contrib-medium.png</PackageIcon>
+    <PackageIconUrl>cake-contrib-medium.png</PackageIconUrl>
+    <PackageReadmeFile>NUGET.md</PackageReadmeFile>
+
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Include the XML documentation file in the NuGet package. -->
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- SourceLink allows step-through debugging for source hosted on GitHub. -->
+    <!-- https://github.com/dotnet/sourcelink -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include icon.png and NUGET.md in the project. -->
+    <None Include="$(RepoRoot)/nuget/cake-contrib-medium.png" Link="cake-contrib-medium.png" Pack="true" PackagePath="." />
+    <None Include="$(RepoRoot)/nuget/NUGET.md" Link="NUGET.md" Pack="true" PackagePath="." />
+    <None Include="$(RepoRoot)/LICENSE" Link="LICENSE" Pack="true" PackagePath="." />
+  </ItemGroup>
+</Project>
